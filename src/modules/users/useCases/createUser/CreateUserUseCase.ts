@@ -8,9 +8,10 @@ import { ICreateUserDTO } from "./ICreateUserDTO";
 
 @injectable()
 export class CreateUserUseCase {
+
   constructor(
-    @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
+    @inject("UsersRepository")
+    private usersRepository: IUsersRepository
   ) {}
 
   async execute({ name, email, password }: ICreateUserDTO) {

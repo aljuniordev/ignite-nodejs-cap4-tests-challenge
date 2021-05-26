@@ -8,6 +8,7 @@ import './database';
 import './shared/container';
 import { router } from './routes';
 import { AppError } from './shared/errors/AppError';
+// import statusMonitor from "express-status-monitor";
 
 const app = express();
 
@@ -30,5 +31,7 @@ app.use(
     });
   }
 );
+
+// app.use(statusMonitor({path: "/servermonitor"}));
 
 export { app };
