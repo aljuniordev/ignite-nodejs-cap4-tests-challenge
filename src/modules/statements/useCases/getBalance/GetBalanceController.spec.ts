@@ -5,18 +5,17 @@ import createConnection from "../../../../database";
 
 let connection: Connection;
 
-describe("Test ShowUserProfileController", () => {
+describe("Test GetBalanceController", () => {
 
   beforeAll(async () => {
     connection = await createConnection();
   })
 
   beforeEach(async () => {
-
     await connection.runMigrations();
   });
 
-  it("Should be able get profile of user", async () => {
+  it("Should be able to get balance of user", async () => {
 
     const respUser = await request(app)
       .post("/api/v1/users")
@@ -33,14 +32,25 @@ describe("Test ShowUserProfileController", () => {
       password: "1234"
     });
 
-    const response = await request(app)
-    .get("/api/v1/profile")
+    const resStatement = await request(app)
+    .post("/api/v1/statements/deposit")
+    .send({
+      amount: 100,
+      description: ""
+    })
     .set({
       Authorization: `Bearer ${respAuth.body.token}`,
     });
 
-    expect(response.body).toHaveProperty("id")
+    const resBalance = await request(app)
+    .get("/api/v1/statements/balance")
+    .set({
+      Authorization: `Bearer ${respAuth.body.token}`,
+    });
+
+    expect(resBalance.body).toHaveProperty("balance", 100);
   });
+
 
   afterAll(async () => {
     await connection.dropDatabase();

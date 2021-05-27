@@ -5,18 +5,17 @@ import createConnection from "../../../../database";
 
 let connection: Connection;
 
-describe("Test ShowUserProfileController", () => {
+describe("Test GetStatementOperationController", () => {
 
   beforeAll(async () => {
     connection = await createConnection();
   })
 
   beforeEach(async () => {
-
     await connection.runMigrations();
   });
 
-  it("Should be able get profile of user", async () => {
+  it("Should be able to get a statement operation by id", async () => {
 
     const respUser = await request(app)
       .post("/api/v1/users")
@@ -33,13 +32,24 @@ describe("Test ShowUserProfileController", () => {
       password: "1234"
     });
 
-    const response = await request(app)
-    .get("/api/v1/profile")
+    const resStatement = await request(app)
+    .post("/api/v1/statements/deposit")
+    .send({
+      amount: 100,
+      description: ""
+    })
+    .set({
+      Authorization: `Bearer ${respAuth.body.token}`,
+    });
+    const statement_id = resStatement.body.id;
+
+    const resOpStatement = await request(app)
+    .get("/api/v1/statements/"+statement_id)
     .set({
       Authorization: `Bearer ${respAuth.body.token}`,
     });
 
-    expect(response.body).toHaveProperty("id")
+    expect(resOpStatement.body).toHaveProperty("id");
   });
 
   afterAll(async () => {

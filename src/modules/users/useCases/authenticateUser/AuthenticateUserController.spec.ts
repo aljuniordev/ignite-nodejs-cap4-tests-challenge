@@ -5,18 +5,17 @@ import createConnection from "../../../../database";
 
 let connection: Connection;
 
-describe("Test ShowUserProfileController", () => {
+describe("Test AuthenticateUserController", () => {
 
   beforeAll(async () => {
     connection = await createConnection();
   })
 
   beforeEach(async () => {
-
     await connection.runMigrations();
   });
 
-  it("Should be able get profile of user", async () => {
+  it("Should be able to authenticate an user", async () => {
 
     const respUser = await request(app)
       .post("/api/v1/users")
@@ -33,13 +32,7 @@ describe("Test ShowUserProfileController", () => {
       password: "1234"
     });
 
-    const response = await request(app)
-    .get("/api/v1/profile")
-    .set({
-      Authorization: `Bearer ${respAuth.body.token}`,
-    });
-
-    expect(response.body).toHaveProperty("id")
+    expect(respAuth.body).toHaveProperty("token")
   });
 
   afterAll(async () => {
