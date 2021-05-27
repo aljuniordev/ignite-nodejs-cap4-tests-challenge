@@ -2,12 +2,19 @@
 import { InMemoryUsersRepository } from "../../../users/repositories/in-memory/InMemoryUsersRepository";
 import { CreateUserUseCase } from "../../../users/useCases/createUser/CreateUserUseCase";
 import { InMemoryStatementsRepository } from "../../repositories/in-memory/InMemoryStatementsRepository";
+import { CreateStatementUseCase } from "../createStatement/CreateStatementUseCase";
 import {GetBalanceUseCase} from "./GetBalanceUseCase";
 
 let statementsRepository: InMemoryStatementsRepository;
 let usersRepository: InMemoryUsersRepository;
 let getBalanceUseCase: GetBalanceUseCase;
 let createUserUseCase: CreateUserUseCase;
+let createStatementUseCase: CreateStatementUseCase;
+
+enum OperationType {
+  DEPOSIT = "deposit",
+  WITHDRAW = "withdraw",
+}
 
 describe("Test GetBalanceUseCase", () => {
 
@@ -16,6 +23,7 @@ describe("Test GetBalanceUseCase", () => {
     usersRepository = new InMemoryUsersRepository();
     getBalanceUseCase = new GetBalanceUseCase(statementsRepository, usersRepository);
     createUserUseCase = new CreateUserUseCase(usersRepository);
+    createStatementUseCase = new CreateStatementUseCase(usersRepository, statementsRepository);
   });
 
   it("should be to get balance of an user", async () => {
@@ -27,9 +35,16 @@ describe("Test GetBalanceUseCase", () => {
 
     const user_id = user.id as string;
 
+    const statement1 = await createStatementUseCase.execute({
+      user_id,
+      type: "deposit" as OperationType,
+      amount: 100,
+      description: ""
+    });
+
     const balance = await getBalanceUseCase.execute({user_id});
 
-    // console.log(balance);
+    expect(balance).toHaveProperty("balance", 100);
   });
 
 })

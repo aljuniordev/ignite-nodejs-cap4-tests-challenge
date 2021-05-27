@@ -23,7 +23,7 @@ services:
         - POSTGRES_USER=postgres
         - POSTGRES_PASSWORD=docker
         - POSTGRES_PORT=5432
-        - POSTGRES_HOST_AUTH_METHOD=md5
+        # - POSTGRES_HOST_AUTH_METHOD=md5
     volumes:
         - pgdata:/data/postgres
 

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules --respawn --poll --interval 1000 ./src/server.ts",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli",
-    "test": "jest"
+    "test": "jest --detectOpenHandles --testTimeout=5000"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
