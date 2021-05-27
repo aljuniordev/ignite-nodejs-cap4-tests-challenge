@@ -1,19 +1,15 @@
 import request from "supertest";
 import { Connection } from "typeorm";
 import {app} from  "../../../../app";
-import { Router } from 'express';
 import createConnection from "../../../../database";
 import { InMemoryUsersRepository } from "../../repositories/in-memory/InMemoryUsersRepository";
 import { CreateUserUseCase } from "../createUser/CreateUserUseCase";
 import { AuthenticateUserUseCase } from "../authenticateUser/AuthenticateUserUseCase";
-import { ensureAuthenticated } from "@shared/infra/http/middlwares/ensureAuthenticated";
 
 let connection: Connection;
 let usersRepository: InMemoryUsersRepository;
 let createUserUseCase: CreateUserUseCase;
 let authenticateUserUseCase: AuthenticateUserUseCase;
-
-jest.mock('', () => jest.fn((req, res, next) => next()));
 
 describe("Test ShowUserProfileController", () => {
 
@@ -42,13 +38,12 @@ describe("Test ShowUserProfileController", () => {
     });
 
     const response = await request(app)
-      .get("/api/v1/profile")
-      .set({
-        Authorization: `Bearer ${auth.token}`,
-      })
+    .get("/api/v1/profile")
+    .set({
+      Authorization: `Bearer ${auth.token}`,
+    });
 
-      console.log(response.body)
-    // expect(response.status).toHaveProperty("id")
+    expect(response.body).toHaveProperty("id")
   });
 
   afterAll(async () => {
